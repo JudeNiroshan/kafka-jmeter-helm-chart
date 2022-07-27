@@ -31,19 +31,19 @@ select in the workload dropdown list the kafka stateful set.
 
 I ran the test with the following parameters:
 
-####transaction-list topic
+#### transaction-list topic
 
 `numRecords` - 1600
 
 `recordSize` - 410 byte
 
-####account topic
+#### account topic
 
 `numRecords` - 400
 
 `recordSize` - 280 byte
 
-####jmeter parameters
+#### jmeter parameters
 
 `sleepTime` - 30 seconds
 
