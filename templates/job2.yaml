@@ -1,0 +1,94 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+{{- if .Values.annotations }}
+  annotations:
+{{ tpl (toYaml .Values.annotations) . | indent 4 }}
+{{- end }}
+  name: jmeter-transaction-list-job
+  labels:
+    app.kubernetes.io/name: {{ include "chart.name" . }}
+    helm.sh/chart: {{ include "chart.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: jmeter-transaction-list
+        app.kubernetes.io/name: jmeter-transaction-list
+    spec:
+      restartPolicy: Never
+      containers:
+        - resources: {}
+          terminationMessagePath: /dev/termination-log
+          name: jmeter-kafka
+          env:
+            - name: JMETER_THREADS
+              value: '1'
+            - name: BOOTSTRAP_SERVERS
+              value: 'https://abc.com:443'
+            - name: SCHEMA_REGISTRY_URL
+              value: 'http://jude-registry-service:8080/apis/ccompat/v6'
+            - name: SCHEMA_REGISTRY_CREDENTIALS
+              value: 'reg-admin:a1s2d3f4'
+            - name: BATCH_SIZE
+              value: '32768'
+            - name: RAMUP_PERIOD
+              value: '1'
+            - name: SAMPLER_LABEL
+              value: Kafka JSR223
+            - name: LOOP_COUNT
+              value: {{ .Values.jmeter.loopCount | quote }}
+            - name: KAFKA_TOPIC
+              value: test-client-tier-transaction-list
+            - name: RECORD_SIZE
+              value: {{ .Values.kafkaProducer.transactionListTopic.recordSize | quote }}
+            - name: NUMBER_RECORDS
+              value: {{ .Values.kafkaProducer.transactionListTopic.numRecords | quote }}
+            - name: LINGER_MS
+              value: '10'
+            - name: THROTTLE_RECORD_SIZE
+              value: '60'
+            - name: ACKS
+              value: all
+            - name: BUFFER_MEMORY
+              value: '33554432'
+            - name: COMPRESSION_TYPE
+              value: none
+            - name: SEND_BUFFER
+              value: '131072'
+            - name: RECEIVE_BUFFER
+              value: '32768'
+            - name: THREADGROUP_SCHEDULER
+              value: 'true'
+            - name: THREADGROUP_DURATION
+              value: '30'
+            - name: THREADGROUP_DELAY
+              value: '30'
+            - name: THREADGROUP_DELAYSTART
+              value: 'true'
+            - name: HEAP
+              value: '-Xms512m -Xmx4096m'
+            - name: MAX_BLOCK_MS
+              value: '60000'
+            - name: DELIVERY_TIMEOUT_MS
+              value: '120000'
+            - name: THROTTLE_MESSAGE_NUM
+              value: '0'
+            - name: SECURITY_PROTOCOL
+              value: SASL_SSL
+            - name: SASL_MECHANISM
+              value: SCRAM-SHA-512
+            - name: JAAS_CONFIG
+              value: /opt/jmeter/testplans/jaas_config.conf
+            - name: SLEEP_TIME
+              value: {{ .Values.jmeter.sleepTime | quote }}
+            - name: JDK_JAVA_OPTIONS
+              value: -Djdk.attach.allowAttachSelf=true -Djol.tryWithSudo=true
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          imagePullPolicy: Always
+          image: {{ .Values.image.repository }}

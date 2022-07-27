@@ -1,0 +1,26 @@
+# Default values for performanceTest.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: 'quay.io/jnirosha/jmeter-kafka-container'
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+kafkaProducer:
+  transactionListTopic:
+    numRecords: 1000000
+    recordSize: 160
+  accountTopic:
+    numRecords: 1000000
+    recordSize: 128
+
+jmeter:
+  sleepTime: 30
+  loopCount: 5
+
+annotations: {}
+nameOverride: ""
+fullnameOverride: ""
