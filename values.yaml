@@ -10,10 +10,15 @@ image:
   tag: ""
 
 kafkaProducer:
+  bootstrapServer: 'https://abc.com:443'
+  schemaRegistry: 'http://jude-registry-service:8080/apis/ccompat/v6'
+  schemaRegistryCredentials: 'reg-admin:a1s2d3f4'
   transactionListTopic:
+    topicName: test-client-tier-transaction-list
     numRecords: 1000000
     recordSize: 160
   accountTopic:
+    topicName: test-client-tier-account
     numRecords: 1000000
     recordSize: 128
 

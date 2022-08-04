@@ -27,11 +27,11 @@ spec:
             - name: JMETER_THREADS
               value: '1'
             - name: BOOTSTRAP_SERVERS
-              value: 'https://abc.com:443'
+              value: {{ .Values.kafkaProducer.bootstrapServer }}
             - name: SCHEMA_REGISTRY_URL
-              value: 'http://jude-registry-service:8080/apis/ccompat/v6'
+              value: {{ .Values.kafkaProducer.schemaRegistry }}
             - name: SCHEMA_REGISTRY_CREDENTIALS
-              value: 'reg-admin:a1s2d3f4'
+              value: {{ .Values.kafkaProducer.schemaRegistryCredentials }}
             - name: BATCH_SIZE
               value: '32768'
             - name: RAMUP_PERIOD
@@ -41,7 +41,7 @@ spec:
             - name: LOOP_COUNT
               value: {{ .Values.jmeter.loopCount | quote }}
             - name: KAFKA_TOPIC
-              value: test-client-tier-account
+              value: {{ .Values.kafkaProducer.accountTopic.topicName }}
             - name: RECORD_SIZE
               value: {{ .Values.kafkaProducer.accountTopic.recordSize | quote }}
             - name: NUMBER_RECORDS
